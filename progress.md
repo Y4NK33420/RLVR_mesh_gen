@@ -236,3 +236,12 @@
 - Progress: Configured `origin` remote to `https://github.com/Y4NK33420/RLVR_mesh_gen.git`.
 - Progress: Created initial commit with project scaffold, documentation, tools, source modules, and tests.
 - Validation: Pushed `main` successfully and set upstream tracking (`origin/main`).
+
+## 2026-04-19 - Added Single-File VPS Whole-Picture Guide
+
+- Added root-level [VPS.md](VPS.md) as a single, practical runbook covering the full execution picture.
+- Included explicit note that this version uses ShapeNet (`ShapeNet/shapenetcore-glb`) with the `furniture_plus_display` cap-1000 subset workflow.
+- Documented both dataset paths requested:
+	- Option A: download and preprocess on VPS.
+	- Option B: upload preprocessed zip directly to VPS and continue from extraction.
+- Added clear "where to go from there" steps for checkpointed training, tmux usage, and resume after interruption/machine switch.

@@ -158,6 +158,7 @@ uv run --python .\.venv\Scripts\python.exe tools\train_offline_grpo_with_checkpo
 ## VPS Setup and Operations Guide
 
 A complete VPS runbook is available at:
+- `VPS.md` (single-file whole-picture workflow)
 - `docs/VPS_SETUP.md`
 
 It includes:
