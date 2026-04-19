@@ -230,3 +230,9 @@
 	- tmux-based long-run execution
 	- same-machine and cross-machine checkpoint resume procedures
 	- failure recovery playbooks and security checklist
+
+## 2026-04-19 - GitHub Remote Publication
+
+- Progress: Configured `origin` remote to `https://github.com/Y4NK33420/RLVR_mesh_gen.git`.
+- Progress: Created initial commit with project scaffold, documentation, tools, source modules, and tests.
+- Validation: Pushed `main` successfully and set upstream tracking (`origin/main`).
