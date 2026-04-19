@@ -1,0 +1,39 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Python caches and local envs
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Editor and OS noise
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local datasets and generated artifacts (large)
+data/
+artifacts/
+Object Scanning/
+
+# Large binary/model outputs
+*.zip
+*.npz
+*.npy
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.bin
+
+# Logs
+*.log
