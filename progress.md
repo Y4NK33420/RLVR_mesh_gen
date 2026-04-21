@@ -245,3 +245,25 @@
 	- Option A: download and preprocess on VPS.
 	- Option B: upload preprocessed zip directly to VPS and continue from extraction.
 - Added clear "where to go from there" steps for checkpointed training, tmux usage, and resume after interruption/machine switch.
+
+## 2026-04-21 - Experiment-Grade Metrics Logging Upgrade
+
+- Decision: Upgrade training logging so final project charts can be generated directly from persisted run artifacts.
+- Updated [tools/train_offline_grpo_with_checkpoints.py](tools/train_offline_grpo_with_checkpoints.py) to add:
+	- Per-step train timeline logging (`train_timeline.jsonl`) with reward/cost/lambda/objective.
+	- Periodic val/test timeline logging (`eval_timeline.jsonl`) with configurable cadence and group cap.
+	- Per-run metadata capture (`run_info.json`) including args, commit hash, host/platform, manifests, and paths.
+	- Run-scoped artifact directory support via `--run-name` and `--experiment-dir`.
+	- Higher default checkpoint retention (`--keep-last 200`) for long-run continuity.
+	- Resume-aware run-name recovery from checkpoint extra state.
+
+- Validation: Executed smoke run (`--steps 1`, eval every step with 1 eval group) and verified outputs:
+	- [artifacts/experiments/offline_grpo/logging_smoke/run_info.json](artifacts/experiments/offline_grpo/logging_smoke/run_info.json)
+	- [artifacts/experiments/offline_grpo/logging_smoke/train_timeline.jsonl](artifacts/experiments/offline_grpo/logging_smoke/train_timeline.jsonl)
+	- [artifacts/experiments/offline_grpo/logging_smoke/eval_timeline.jsonl](artifacts/experiments/offline_grpo/logging_smoke/eval_timeline.jsonl)
+	- [artifacts/experiments/offline_grpo/logging_smoke/latest_metrics.json](artifacts/experiments/offline_grpo/logging_smoke/latest_metrics.json)
+
+- Documentation updated to match new workflow:
+	- [README.md](README.md)
+	- [VPS.md](VPS.md)
+	- [docs/VPS_SETUP.md](docs/VPS_SETUP.md)

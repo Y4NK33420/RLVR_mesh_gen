@@ -127,13 +127,25 @@ Run training with per-step checkpointing:
 ```bash
 python tools/train_offline_grpo_with_checkpoints.py \
   --train-manifest artifacts/shapenet_furniture_plus_display_cap1000_preprocessed/manifests/train.json \
+  --val-manifest artifacts/shapenet_furniture_plus_display_cap1000_preprocessed/manifests/val.json \
+  --test-manifest artifacts/shapenet_furniture_plus_display_cap1000_preprocessed/manifests/test.json \
   --dataset-root artifacts/shapenet_furniture_plus_display_cap1000_preprocessed \
   --steps 20000 \
   --group-size 8 \
   --checkpoint-dir artifacts/checkpoints/offline_grpo \
   --save-every-steps 1 \
+  --eval-every-steps 100 \
+  --max-eval-groups 16 \
+  --run-name shapenet_exp01 \
+  --experiment-dir artifacts/experiments/offline_grpo \
   --keep-last 200
 ```
+
+Per-run experiment artifacts for charting are written to:
+- artifacts/experiments/offline_grpo/shapenet_exp01/run_info.json
+- artifacts/experiments/offline_grpo/shapenet_exp01/train_timeline.jsonl
+- artifacts/experiments/offline_grpo/shapenet_exp01/eval_timeline.jsonl
+- artifacts/experiments/offline_grpo/shapenet_exp01/latest_metrics.json
 
 Detach session:
 - `Ctrl+B`, then `D`
@@ -154,6 +166,10 @@ python tools/train_offline_grpo_with_checkpoints.py \
   --group-size 8 \
   --checkpoint-dir artifacts/checkpoints/offline_grpo \
   --save-every-steps 1 \
+  --eval-every-steps 100 \
+  --max-eval-groups 16 \
+  --run-name shapenet_exp01 \
+  --experiment-dir artifacts/experiments/offline_grpo \
   --keep-last 200 \
   --resume
 ```
@@ -236,7 +252,12 @@ During run:
 ```bash
 cat artifacts/checkpoints/offline_grpo/latest_metrics.json
 ```
-3. Sync checkpoints out-of-band if VPS is preemptible.
+3. Confirm train/eval timelines are growing:
+```bash
+wc -l artifacts/experiments/offline_grpo/shapenet_exp01/train_timeline.jsonl
+wc -l artifacts/experiments/offline_grpo/shapenet_exp01/eval_timeline.jsonl
+```
+4. Sync checkpoints and experiment logs out-of-band if VPS is preemptible.
 
 After run:
 1. Archive final checkpoint set.

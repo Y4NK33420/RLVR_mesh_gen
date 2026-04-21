@@ -141,19 +141,36 @@ Run:
 ```powershell
 uv run --python .\.venv\Scripts\python.exe tools\train_offline_grpo_with_checkpoints.py ^
   --train-manifest artifacts/shapenet_furniture_plus_display_cap1000_preprocessed/manifests/train.json ^
+  --val-manifest artifacts/shapenet_furniture_plus_display_cap1000_preprocessed/manifests/val.json ^
+  --test-manifest artifacts/shapenet_furniture_plus_display_cap1000_preprocessed/manifests/test.json ^
   --dataset-root artifacts/shapenet_furniture_plus_display_cap1000_preprocessed ^
   --steps 500 --group-size 8 ^
   --checkpoint-dir artifacts/checkpoints/offline_grpo ^
-  --save-every-steps 1 --keep-last 20
+  --save-every-steps 1 --keep-last 200 ^
+  --eval-every-steps 100 --max-eval-groups 16 ^
+  --run-name shapenet_exp01 --experiment-dir artifacts/experiments/offline_grpo
 ```
 
-Resume on same machine or a different machine:
+Default experiment artifacts now saved per run:
+- `artifacts/experiments/offline_grpo/<run_name>/run_info.json`
+- `artifacts/experiments/offline_grpo/<run_name>/train_timeline.jsonl`
+- `artifacts/experiments/offline_grpo/<run_name>/eval_timeline.jsonl`
+- `artifacts/experiments/offline_grpo/<run_name>/latest_metrics.json`
+
+These files are chart-ready for experiment reporting.
+
+Resume on same machine or a different machine (use same run name):
 ```powershell
 uv run --python .\.venv\Scripts\python.exe tools\train_offline_grpo_with_checkpoints.py ^
   --steps 500 --group-size 8 ^
   --checkpoint-dir artifacts/checkpoints/offline_grpo ^
-  --save-every-steps 1 --keep-last 20 --resume
+  --save-every-steps 1 --keep-last 200 ^
+  --eval-every-steps 100 --max-eval-groups 16 ^
+  --run-name shapenet_exp01 --experiment-dir artifacts/experiments/offline_grpo ^
+  --resume
 ```
+
+Optional: disable periodic val/test evaluation logs with `--disable-eval`.
 
 ## VPS Setup and Operations Guide
 

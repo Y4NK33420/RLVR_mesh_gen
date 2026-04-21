@@ -7,6 +7,7 @@ This document is the single end-to-end guide for running this project on a VPS.
 Goal for this project version:
 - Use RLVR-style mesh quality alignment with deterministic geometry rewards.
 - Train the offline GRPO scaffold with step-level checkpointing so runs can survive machine switching or preemption.
+- Persist chart-ready experiment timelines and run metadata for final project reporting.
 - Keep topology constraints and reward metrics reproducible.
 
 Practical objective right now:
@@ -193,12 +194,18 @@ Run training with per-step checkpointing:
 ```bash
 python tools/train_offline_grpo_with_checkpoints.py \
   --train-manifest artifacts/shapenet_furniture_plus_display_cap1000_preprocessed/manifests/train.json \
+  --val-manifest artifacts/shapenet_furniture_plus_display_cap1000_preprocessed/manifests/val.json \
+  --test-manifest artifacts/shapenet_furniture_plus_display_cap1000_preprocessed/manifests/test.json \
   --dataset-root artifacts/shapenet_furniture_plus_display_cap1000_preprocessed \
   --steps 20000 \
   --group-size 8 \
   --checkpoint-dir artifacts/checkpoints/offline_grpo \
   --save-every-steps 1 \
-  --keep-last 200
+  --keep-last 200 \
+  --eval-every-steps 100 \
+  --max-eval-groups 16 \
+  --run-name shapenet_exp01 \
+  --experiment-dir artifacts/experiments/offline_grpo
 ```
 
 If your extracted dataset path is outside repo (Option B), point to that absolute path instead:
@@ -206,13 +213,27 @@ If your extracted dataset path is outside repo (Option B), point to that absolut
 ```bash
 python tools/train_offline_grpo_with_checkpoints.py \
   --train-manifest /home/<user>/datasets/run/shapenet_furniture_plus_display_cap1000_preprocessed/manifests/train.json \
+  --val-manifest /home/<user>/datasets/run/shapenet_furniture_plus_display_cap1000_preprocessed/manifests/val.json \
+  --test-manifest /home/<user>/datasets/run/shapenet_furniture_plus_display_cap1000_preprocessed/manifests/test.json \
   --dataset-root /home/<user>/datasets/run/shapenet_furniture_plus_display_cap1000_preprocessed \
   --steps 20000 \
   --group-size 8 \
   --checkpoint-dir artifacts/checkpoints/offline_grpo \
   --save-every-steps 1 \
-  --keep-last 200
+  --keep-last 200 \
+  --eval-every-steps 100 \
+  --max-eval-groups 16 \
+  --run-name shapenet_exp01 \
+  --experiment-dir artifacts/experiments/offline_grpo
 ```
+
+Experiment logs produced per run:
+- artifacts/experiments/offline_grpo/shapenet_exp01/run_info.json
+- artifacts/experiments/offline_grpo/shapenet_exp01/train_timeline.jsonl
+- artifacts/experiments/offline_grpo/shapenet_exp01/eval_timeline.jsonl
+- artifacts/experiments/offline_grpo/shapenet_exp01/latest_metrics.json
+
+Use these for charts of step vs reward/cost/lambda/objective and periodic val/test trends.
 
 Detach tmux:
 - Ctrl+B, then D
@@ -233,6 +254,10 @@ python tools/train_offline_grpo_with_checkpoints.py \
   --group-size 8 \
   --checkpoint-dir artifacts/checkpoints/offline_grpo \
   --save-every-steps 1 \
+  --eval-every-steps 100 \
+  --max-eval-groups 16 \
+  --run-name shapenet_exp01 \
+  --experiment-dir artifacts/experiments/offline_grpo \
   --keep-last 200 \
   --resume
 ```
@@ -254,6 +279,8 @@ Before training:
 During training:
 - checkpoints are appearing in artifacts/checkpoints/offline_grpo/
 - latest pointer exists: artifacts/checkpoints/offline_grpo/latest.json
+- train timeline grows: artifacts/experiments/offline_grpo/<run_name>/train_timeline.jsonl
+- eval timeline grows: artifacts/experiments/offline_grpo/<run_name>/eval_timeline.jsonl
 
 After interruptions:
 - run with --resume and verify step number increases from previous latest
